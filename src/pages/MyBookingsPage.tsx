@@ -47,7 +47,6 @@ function errorMessage(err: unknown): string {
 
 const STATUS_STYLE: Record<BookingStatus, string> = {
   pending_payment: 'bg-amber-100 text-amber-800 ring-amber-300',
-  pending_review: 'bg-sky-100 text-sky-800 ring-sky-300',
   approved: 'bg-emerald-100 text-emerald-800 ring-emerald-300',
   rejected: 'bg-rose-100 text-rose-800 ring-rose-300',
   cancelled: 'bg-zinc-200 text-zinc-700 ring-zinc-300',
@@ -351,7 +350,7 @@ function BookingCard({
   }, [booking.slipName])
 
   const canCancel =
-    booking.status === 'pending_payment' || booking.status === 'pending_review'
+    booking.status === 'pending_payment' || (booking.status === 'approved' && booking.amount === 0)
   const canPay = booking.status === 'pending_payment'
   const roomNames = useMemo(() => booking.rooms.map((r) => r.name).join(', '), [booking.rooms])
   const attendeesMax = useMemo(

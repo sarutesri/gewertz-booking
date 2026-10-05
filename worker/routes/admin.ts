@@ -13,7 +13,6 @@ import { requireAdmin, type AppEnv } from '../middleware'
 
 const statusFilter = z.enum([
   'pending_payment',
-  'pending_review',
   'approved',
   'rejected',
   'cancelled',
@@ -60,7 +59,7 @@ adminRoutes.post('/bookings/:id/verify-payment', async (c) => {
 adminRoutes.post('/bookings/:id/approve', async (c) => {
   const booking = await fetchBooking(c.env.DB, c.req.param('id'))
   if (!booking) return c.json({ error: 'ไม่พบรายการจอง' }, 404)
-  if (booking.status !== 'pending_payment' && booking.status !== 'pending_review') {
+  if (booking.status !== 'pending_payment') {
     return c.json({ error: 'รายการนี้ไม่อยู่ในสถานะที่รออนุมัติ' }, 409)
   }
   if (booking.amount > 0 && booking.paymentVerifiedAt === null) {

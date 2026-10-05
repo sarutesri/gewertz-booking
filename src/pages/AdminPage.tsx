@@ -46,7 +46,6 @@ const TABS: { id: Tab; label: string }[] = [
 
 const STATUS_FILTERS = [
   'pending_payment',
-  'pending_review',
   'approved',
   'rejected',
   'cancelled',
@@ -63,7 +62,6 @@ const RATE_KIND_LABEL: Record<RateKind, string> = {
 
 const STATUS_BADGE: Record<string, string> = {
   pending_payment: 'bg-amber-100 text-amber-900 ring-amber-300',
-  pending_review: 'bg-sky-100 text-sky-900 ring-sky-300',
   approved: 'bg-emerald-100 text-emerald-900 ring-emerald-300',
   rejected: 'bg-rose-100 text-rose-900 ring-rose-300',
   cancelled: 'bg-zinc-200 text-zinc-800 ring-zinc-300',
@@ -287,8 +285,7 @@ function RequestsTab() {
           {rows.map((row) => {
             const busy = busyId === row.id
             const verified = row.paymentVerifiedAt !== null
-            const decidable =
-              row.status === 'pending_payment' || row.status === 'pending_review'
+            const decidable = row.status === 'pending_payment'
             const rejectable = row.status !== 'cancelled' && row.status !== 'rejected'
             return (
               <li

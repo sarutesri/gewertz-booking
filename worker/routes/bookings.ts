@@ -159,14 +159,17 @@ bookingRoutes.post('/bookings', async (c) => {
   const now = Date.now()
   const id = crypto.randomUUID()
   const code = `GW-${id.slice(0, 6).toUpperCase()}`
-  const status = quote.total > 0 ? 'pending_payment' : 'pending_review'
-  const expiresAt = quote.total > 0 ? now + Number(c.env.PAYMENT_WINDOW_HOURS) * 3_600_000 : null
+  // หน่วยงานภายในไม่มีค่าใช้จ่าย จึงอนุมัติให้ทันทีโดยไม่ต้องรอแอดมิน
+  const autoApprove = quote.total === 0
+  const status = autoApprove ? 'approved' : 'pending_payment'
+  const expiresAt = autoApprove ? null : now + Number(c.env.PAYMENT_WINDOW_HOURS) * 3_600_000
 
-  await c.env.DB.batch([
+  const statements = [
     c.env.DB.prepare(
       `INSERT INTO bookings (id, code, user_id, activity_date, start_hour, end_hour, user_type,
-        attendees, purpose, status, amount, price_snapshot, expires_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        attendees, purpose, status, amount, price_snapshot, expires_at, reviewed_at,
+        created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(
       id,
       code,
@@ -181,13 +184,39 @@ bookingRoutes.post('/bookings', async (c) => {
       quote.total,
       JSON.stringify(quote),
       expiresAt,
+      autoApprove ? now : null,
       now,
       now,
     ),
     ...roomIds.map((roomId) =>
       c.env.DB.prepare('INSERT INTO booking_rooms (booking_id, room_id) VALUES (?, ?)').bind(id, roomId),
     ),
-  ])
+    ...(autoApprove
+      ? chosen.flatMap((room) =>
+          Array.from({ length: input.endHour - input.startHour }, (_, index) =>
+            c.env.DB.prepare(
+              'INSERT INTO booking_slots (room_id, activity_date, hour, booking_id) VALUES (?, ?, ?, ?)',
+            ).bind(room.id, input.activityDate, input.startHour + index, id),
+          ),
+        )
+      : []),
+  ]
+
+  try {
+    await c.env.DB.batch(statements)
+  } catch (error) {
+    // ช่วงเวลาอาจถูกอนุมัติไปแล้วระหว่างที่ตรวจสอบ ให้รายงานช่วงที่ชนแทน error ดิบ
+    if (!String(error).includes('UNIQUE constraint failed: booking_slots')) throw error
+    const conflicts = await findConflicts(c.env.DB, {
+      date: input.activityDate,
+      startHour: input.startHour,
+      endHour: input.endHour,
+      roomIds,
+      now: Date.now(),
+      includePending: true,
+    })
+    return c.json({ error: 'ช่วงเวลานี้มีการจองไว้แล้ว กรุณาเลือกช่วงเวลาอื่น', conflicts }, 409)
+  }
 
   return c.json({ id, code, status, amount: quote.total, quote }, 201)
 })
@@ -197,8 +226,14 @@ bookingRoutes.post('/bookings/:id/cancel', async (c) => {
   const booking = await fetchBooking(c.env.DB, c.req.param('id'))
   if (!booking) return c.json({ error: 'ไม่พบรายการจอง' }, 404)
   if (booking.userId !== viewer.id) return c.json({ error: 'ไม่มีสิทธิ์ดำเนินการ' }, 403)
-  if (booking.status !== 'pending_payment' && booking.status !== 'pending_review') {
-    return c.json({ error: 'ยกเลิกได้เฉพาะรายการที่ยังรอดำเนินการอยู่เท่านั้น' }, 409)
+  if (
+    booking.status !== 'pending_payment' &&
+    !(booking.status === 'approved' && booking.amount === 0)
+  ) {
+    return c.json(
+      { error: 'ยกเลิกได้เฉพาะรายการที่ยังรอชำระเงิน หรือรายการที่อนุมัติแล้วและไม่มีค่าใช้จ่าย' },
+      409,
+    )
   }
 
   await c.env.DB.batch([

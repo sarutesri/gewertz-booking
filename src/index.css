@@ -8,6 +8,8 @@
 
 html {
   font-family: var(--font-sans);
+  /* ขนาดฟอนต์ฐาน 18px — Tailwind คิดขนาดทุกอย่างเป็น rem จึงใหญ่ขึ้นทั้งหน้า */
+  font-size: 112.5%;
   line-height: 1.6;
 }
 

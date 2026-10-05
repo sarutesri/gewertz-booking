@@ -2,7 +2,6 @@ export type UserType = 'internal' | 'joint' | 'external'
 export type RateKind = 'day' | 'evening'
 export type BookingStatus =
   | 'pending_payment'
-  | 'pending_review'
   | 'approved'
   | 'rejected'
   | 'cancelled'
@@ -101,7 +100,6 @@ export const USER_TYPE_LABEL: Record<UserType, string> = {
 
 export const STATUS_LABEL: Record<BookingStatus, string> = {
   pending_payment: 'รอชำระเงิน',
-  pending_review: 'รอแอดมินอนุมัติ',
   approved: 'อนุมัติแล้ว',
   rejected: 'ไม่อนุมัติ',
   cancelled: 'ยกเลิก',

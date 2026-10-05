@@ -121,7 +121,7 @@ export default function BookingGrid({
                         title={`${room.name} ${hourLabel(hour)} · ${CELL_TEXT[state]}${owner ? ` · ${owner}` : ''}${
                           cell?.code ? ` · ${cell.code}` : ''
                         }`}
-                        className={`flex h-9 items-center justify-center rounded-md border border-transparent text-[11px] leading-tight ${
+                        className={`flex h-9 items-center justify-center rounded-md border border-transparent text-[0.68rem] leading-tight ${
                           CELL_CLASS[state]
                         } ${cell?.mine === true ? 'ring-2 ring-sky-400' : ''}`}
                       >

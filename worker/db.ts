@@ -184,7 +184,7 @@ export async function findConflicts(
          FROM bookings b
          JOIN booking_rooms br ON br.booking_id = b.id
          JOIN users u ON u.id = b.user_id
-         WHERE b.activity_date = ? AND b.status IN ('pending_payment', 'pending_review')
+         WHERE b.activity_date = ? AND b.status = 'pending_payment'
            AND (b.expires_at IS NULL OR b.expires_at > ?)
            AND b.start_hour < ? AND b.end_hour > ?
            AND br.room_id IN (${placeholders})`,
