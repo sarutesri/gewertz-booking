@@ -1,0 +1,3 @@
+# Copy to .dev.vars for local development: `wrangler dev`
+# Generate a real value with: node -e "console.log(crypto.randomUUID()+crypto.randomUUID())"
+SESSION_SECRET="change-me-to-a-long-random-string"

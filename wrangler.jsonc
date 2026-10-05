@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gewertz-booking",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-05",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gewertz-booking",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // Comma-separated emails that are promoted to admin on sign-in.
+    "ADMIN_EMAILS": "",
+    // Bookable window in whole hours.
+    "OPEN_START": "8",
+    "OPEN_END": "20",
+    // Hours a pending payment keeps its soft hold before it expires.
+    "PAYMENT_WINDOW_HOURS": "24"
+  }
+}

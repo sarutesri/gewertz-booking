@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Th Sarabun New', 'Noto Sans Thai', 'Sarabun', 'Leelawadee UI', 'Noto Sans', 'Tahoma', system-ui,
+    sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-slate-100);
+  color: var(--color-slate-900);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+}
