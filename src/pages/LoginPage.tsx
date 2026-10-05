@@ -67,21 +67,29 @@ export default function LoginPage() {
   const submitLabel = submitting ? 'กำลังดำเนินการ…' : registering ? 'สร้างบัญชี' : 'เข้าสู่ระบบ'
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-slate-100 px-4 py-10">
+    <div className="flex min-h-dvh items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
-        <header className="mb-6 text-center">
-          <h1 className="text-2xl font-semibold text-slate-900">ระบบจองห้อง</h1>
-          <p className="mt-1 text-sm text-slate-600">GEWERTZ SQUARE คณะวิศวกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
+        <header className="mb-8 text-center">
+          <span
+            aria-hidden="true"
+            className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-brand-600 text-lg font-semibold tracking-tight text-white"
+          >
+            GWS
+          </span>
+          <h1 className="text-3xl font-semibold text-slate-900">ระบบจองห้อง</h1>
+          <p className="mt-2 text-base text-slate-700">GEWERTZ SQUARE คณะวิศวกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
         </header>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-6 grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="mb-8 grid grid-cols-2 gap-1 rounded-xl bg-slate-100 p-1">
             <button
               type="button"
               onClick={() => switchMode('signin')}
               aria-pressed={!registering}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-                registering ? 'text-slate-600 hover:bg-white/60' : 'bg-white text-slate-900 shadow-sm'
+              className={`min-h-12 rounded-lg px-4 py-3 text-base font-medium transition focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 ${
+                registering
+                  ? 'text-slate-700 hover:bg-white/60'
+                  : 'bg-brand-600 text-white shadow-sm'
               }`}
             >
               เข้าสู่ระบบ
@@ -90,18 +98,20 @@ export default function LoginPage() {
               type="button"
               onClick={() => switchMode('signup')}
               aria-pressed={registering}
-              className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-                registering ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:bg-white/60'
+              className={`min-h-12 rounded-lg px-4 py-3 text-base font-medium transition focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 ${
+                registering
+                  ? 'bg-brand-600 text-white shadow-sm'
+                  : 'text-slate-700 hover:bg-white/60'
               }`}
             >
               สมัครใช้งาน
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
             {registering && (
               <label className="block">
-                <span className="mb-1 block text-sm font-medium text-slate-700">ชื่อ-นามสกุล</span>
+                <span className="mb-2 block text-base font-medium text-slate-700">ชื่อ-นามสกุล</span>
                 <input
                   type="text"
                   value={name}
@@ -110,12 +120,12 @@ export default function LoginPage() {
                   maxLength={120}
                   className={inputClass(fieldErrors.name !== undefined)}
                 />
-                {fieldErrors.name && <p className="mt-1 text-xs text-rose-600">{fieldErrors.name}</p>}
+                {fieldErrors.name && <p className="mt-2 text-sm text-rose-700">{fieldErrors.name}</p>}
               </label>
             )}
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-slate-700">อีเมล</span>
+              <span className="mb-2 block text-base font-medium text-slate-700">อีเมล</span>
               <input
                 type="email"
                 value={email}
@@ -124,11 +134,11 @@ export default function LoginPage() {
                 maxLength={200}
                 className={inputClass(fieldErrors.email !== undefined)}
               />
-              {fieldErrors.email && <p className="mt-1 text-xs text-rose-600">{fieldErrors.email}</p>}
+              {fieldErrors.email && <p className="mt-2 text-sm text-rose-700">{fieldErrors.email}</p>}
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-slate-700">รหัสผ่าน</span>
+              <span className="mb-2 block text-base font-medium text-slate-700">รหัสผ่าน</span>
               <input
                 type="password"
                 value={password}
@@ -138,14 +148,14 @@ export default function LoginPage() {
                 className={inputClass(fieldErrors.password !== undefined)}
               />
               {fieldErrors.password ? (
-                <p className="mt-1 text-xs text-rose-600">{fieldErrors.password}</p>
+                <p className="mt-2 text-sm text-rose-700">{fieldErrors.password}</p>
               ) : (
-                <p className="mt-1 text-xs text-slate-500">รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร</p>
+                <p className="mt-2 text-sm text-slate-600">รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร</p>
               )}
             </label>
 
             {formError && (
-              <p role="alert" className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              <p role="alert" className="rounded-xl bg-rose-50 px-4 py-3 text-base text-rose-800">
                 {formError}
               </p>
             )}
@@ -153,13 +163,13 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-lg bg-sky-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full min-h-12 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-brand-700 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitLabel}
             </button>
           </form>
 
-          <p className="mt-4 text-center text-xs text-slate-500">
+          <p className="mt-6 text-center text-sm text-slate-600">
             {registering
               ? 'มีบัญชีอยู่แล้ว? กด "เข้าสู่ระบบ" ด้านบนเพื่อเข้าใช้งาน'
               : 'ยังไม่มีบัญชี? เลือก "สมัครใช้งาน" ด้านบนเพื่อสร้างบัญชีใหม่'}
@@ -171,9 +181,9 @@ export default function LoginPage() {
 }
 
 function inputClass(invalid: boolean): string {
-  return `w-full rounded-lg border px-3 py-2 text-sm outline-none transition focus:ring-2 ${
+  return `w-full min-h-12 rounded-xl border px-4 py-3 text-base outline-none transition focus:ring-2 ${
     invalid
       ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-rose-200'
-      : 'border-slate-300 bg-white focus:border-sky-600 focus:ring-sky-200'
+      : 'border-slate-300 bg-white focus:border-brand-600 focus:ring-brand-200'
   }`
 }

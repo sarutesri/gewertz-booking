@@ -2,20 +2,31 @@
 
 @theme {
   --font-sans:
-    'Th Sarabun New', 'Noto Sans Thai', 'Sarabun', 'Leelawadee UI', 'Noto Sans', 'Tahoma', system-ui,
+    'Sarabun', 'Noto Sans Thai', 'Th Sarabun New', 'Leelawadee UI', 'Noto Sans', 'Tahoma', system-ui,
     sans-serif;
+  --color-brand-50: #fdf5f7;
+  --color-brand-100: #fbe9ee;
+  --color-brand-200: #f6d1db;
+  --color-brand-300: #eea9bc;
+  --color-brand-400: #e0789a;
+  --color-brand-500: #d14f78;
+  --color-brand-600: #b93360;
+  --color-brand-700: #9c274d;
+  --color-brand-800: #83243f;
+  --color-brand-900: #6f2239;
+  --color-brand-950: #3f0d1d;
 }
 
 html {
   font-family: var(--font-sans);
-  /* ขนาดฟอนต์ฐาน 18px — Tailwind คิดขนาดทุกอย่างเป็น rem จึงใหญ่ขึ้นทั้งหน้า */
-  font-size: 112.5%;
-  line-height: 1.6;
+  /* ขนาดฟอนต์ฐาน 20px — Tailwind คิดขนาดทุกอย่างเป็น rem จึงใหญ่ขึ้นทั้งหน้า */
+  font-size: 125%;
+  line-height: 1.7;
 }
 
 body {
   margin: 0;
-  background-color: var(--color-slate-100);
+  background-color: var(--color-slate-50);
   color: var(--color-slate-900);
   font-synthesis: none;
   text-rendering: optimizeLegibility;

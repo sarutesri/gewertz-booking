@@ -61,10 +61,10 @@ const RATE_KIND_LABEL: Record<RateKind, string> = {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  pending_payment: 'bg-amber-100 text-amber-900 ring-amber-300',
-  approved: 'bg-emerald-100 text-emerald-900 ring-emerald-300',
-  rejected: 'bg-rose-100 text-rose-900 ring-rose-300',
-  cancelled: 'bg-zinc-200 text-zinc-800 ring-zinc-300',
+  pending_payment: 'bg-amber-100 text-amber-900 ring-amber-400',
+  approved: 'bg-emerald-100 text-emerald-900 ring-emerald-400',
+  rejected: 'bg-rose-100 text-rose-900 ring-rose-400',
+  cancelled: 'bg-slate-200 text-slate-800 ring-slate-400',
 }
 
 function messageOf(error: unknown): string {
@@ -92,23 +92,25 @@ function conflictDetail(
     .join('\n')
 }
 
+const FOCUS =
+  'focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2'
 const btnPrimary =
-  'inline-flex items-center justify-center rounded-lg bg-sky-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-50'
+  `inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-brand-700 ${FOCUS} disabled:cursor-not-allowed disabled:opacity-50`
 const btnGhost =
-  'inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50'
+  `inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-50 ${FOCUS} disabled:cursor-not-allowed disabled:opacity-50`
 const btnDanger =
-  'inline-flex items-center justify-center rounded-lg bg-rose-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-rose-800 disabled:cursor-not-allowed disabled:opacity-50'
+  `inline-flex min-h-12 items-center justify-center rounded-xl bg-rose-700 px-5 py-3 text-base font-medium text-white transition hover:bg-rose-800 ${FOCUS} disabled:cursor-not-allowed disabled:opacity-50`
 const btnSuccess =
-  'inline-flex items-center justify-center rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50'
+  `inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-700 px-5 py-3 text-base font-medium text-white transition hover:bg-emerald-800 ${FOCUS} disabled:cursor-not-allowed disabled:opacity-50`
 const inputCls =
-  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-sky-600 focus:ring-2 focus:ring-sky-100 disabled:bg-slate-100'
+  `w-full min-h-12 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-200 disabled:bg-slate-100`
 
 function SectionError({ message }: { message: string }) {
   if (!message) return null
   return (
     <div
       role="alert"
-      className="whitespace-pre-line rounded-lg border border-rose-300 bg-rose-50 px-4 py-3 text-sm text-rose-900"
+      className="whitespace-pre-line rounded-xl border border-rose-300 bg-rose-50 px-5 py-4 text-base text-rose-900"
     >
       {message}
     </div>
@@ -120,7 +122,7 @@ function SectionNotice({ message }: { message: string }) {
   return (
     <div
       role="status"
-      className="whitespace-pre-line rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-900"
+      className="whitespace-pre-line rounded-xl border border-emerald-300 bg-emerald-50 px-5 py-4 text-base text-emerald-900"
     >
       {message}
     </div>
@@ -129,8 +131,8 @@ function SectionNotice({ message }: { message: string }) {
 
 function Spinner() {
   return (
-    <div className="flex items-center gap-2 py-10 text-sm text-slate-500">
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />
+    <div className="flex items-center gap-3 py-12 text-base text-slate-600">
+      <span className="size-5 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />
       กำลังโหลดข้อมูล…
     </div>
   )
@@ -242,9 +244,9 @@ function RequestsTab() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-col gap-1 text-sm text-slate-700">
+        <label className="flex flex-col gap-2 text-base text-slate-700">
           <span>สถานะ</span>
           <select
             className={inputCls}
@@ -275,13 +277,13 @@ function RequestsTab() {
       {loading && rows === null ? <Spinner /> : null}
 
       {rows !== null && rows.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+        <p className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-base text-slate-600">
           ไม่มีรายการจองตามสถานะที่เลือก
         </p>
       ) : null}
 
       {rows !== null && rows.length > 0 ? (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-4">
           {rows.map((row) => {
             const busy = busyId === row.id
             const verified = row.paymentVerifiedAt !== null
@@ -290,66 +292,65 @@ function RequestsTab() {
             return (
               <li
                 key={row.id}
-                className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-sm font-semibold text-slate-900">
+                  <span className="font-mono text-base font-semibold text-slate-900">
                     {row.code}
                   </span>
                   <span
-                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${
-                      STATUS_BADGE[row.status] ??
-                      'bg-slate-100 text-slate-800 ring-slate-300'
+                    className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ring-1 ${
+                      STATUS_BADGE[row.status] ?? 'bg-slate-100 text-slate-800 ring-slate-400'
                     }`}
                   >
                     {STATUS_LABEL[row.status]}
                   </span>
                   <span
-                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${
+                    className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ring-1 ${
                       verified
-                        ? 'bg-emerald-50 text-emerald-800 ring-emerald-300'
-                        : 'bg-slate-100 text-slate-700 ring-slate-300'
+                        ? 'bg-emerald-100 text-emerald-900 ring-emerald-400'
+                        : 'bg-slate-100 text-slate-700 ring-slate-400'
                     }`}
                   >
                     {verified ? 'ตรวจสอบการชำระเงินแล้ว' : 'ยังไม่ตรวจสอบการชำระเงิน'}
                   </span>
                 </div>
 
-                <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-2 text-sm text-slate-700 sm:grid-cols-2 lg:grid-cols-3">
+                <dl className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3 text-base text-slate-700 sm:grid-cols-2 lg:grid-cols-3">
                   <div>
-                    <dt className="text-xs text-slate-500">ผู้จอง</dt>
+                    <dt className="text-sm text-slate-600">ผู้จอง</dt>
                     <dd className="font-medium text-slate-900">{row.bookerName ?? '—'}</dd>
-                    <dd className="text-xs text-slate-500">{row.bookerEmail ?? '—'}</dd>
+                    <dd className="text-sm text-slate-600">{row.bookerEmail ?? '—'}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-slate-500">ห้อง</dt>
+                    <dt className="text-sm text-slate-600">ห้อง</dt>
                     <dd>{row.rooms.map((room) => room.name).join(', ')}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-slate-500">วันและเวลา</dt>
+                    <dt className="text-sm text-slate-600">วันและเวลา</dt>
                     <dd>
                       {formatDate(row.activityDate)} · {hourRange(row.startHour, row.endHour)}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-slate-500">ประเภทผู้ใช้</dt>
+                    <dt className="text-sm text-slate-600">ประเภทผู้ใช้</dt>
                     <dd>{USER_TYPE_LABEL[row.userType]}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-slate-500">จำนวนผู้เข้าร่วม</dt>
+                    <dt className="text-sm text-slate-600">จำนวนผู้เข้าร่วม</dt>
                     <dd>{row.attendees} คน</dd>
                   </div>
                   <div>
-                    <dt className="text-xs text-slate-500">ยอดชำระ</dt>
+                    <dt className="text-sm text-slate-600">ยอดชำระ</dt>
                     <dd className="font-semibold text-slate-900">{baht(row.amount)}</dd>
                   </div>
                   <div className="sm:col-span-2 lg:col-span-3">
-                    <dt className="text-xs text-slate-500">วัตถุประสงค์</dt>
+                    <dt className="text-sm text-slate-600">วัตถุประสงค์</dt>
                     <dd className="whitespace-pre-line">{row.purpose || '—'}</dd>
                   </div>
                   {row.paymentNote ? (
                     <div className="sm:col-span-2 lg:col-span-3">
-                      <dt className="text-xs text-slate-500">หมายเหตุจากผู้จอง</dt>
+                      <dt className="text-sm text-slate-600">หมายเหตุจากผู้จอง</dt>
                       <dd className="whitespace-pre-line text-slate-700">
                         {row.paymentNote}
                       </dd>
@@ -357,7 +358,7 @@ function RequestsTab() {
                   ) : null}
                   {row.reviewNote ? (
                     <div className="sm:col-span-2 lg:col-span-3">
-                      <dt className="text-xs text-slate-500">หมายเหตุของผู้ดูแลระบบ</dt>
+                      <dt className="text-sm text-slate-600">หมายเหตุของผู้ดูแลระบบ</dt>
                       <dd className="whitespace-pre-line text-slate-700">
                         {row.reviewNote}
                       </dd>
@@ -365,7 +366,7 @@ function RequestsTab() {
                   ) : null}
                   {row.status === 'pending_payment' ? (
                     <div className="sm:col-span-2 lg:col-span-3">
-                      <dt className="text-xs text-slate-500">กำหนดเวลาส่งสลิป</dt>
+                      <dt className="text-sm text-slate-600">กำหนดเวลาส่งสลิป</dt>
                       <dd className="text-amber-800">
                         {formatDateTime(row.expiresAt ?? row.createdAt)} ·{' '}
                         {expiryText(row.expiresAt) || 'ไม่กำหนด'}
@@ -374,7 +375,7 @@ function RequestsTab() {
                   ) : null}
                 </dl>
 
-                <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+                <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-slate-100 pt-4">
                   {row.hasSlip ? (
                     <button
                       type="button"
@@ -384,7 +385,7 @@ function RequestsTab() {
                       เปิดสลิป{row.slipName ? ` (${row.slipName})` : ''}
                     </button>
                   ) : (
-                    <span className="text-xs text-slate-500">ยังไม่มีสลิปแนบ</span>
+                    <span className="text-sm text-slate-600">ยังไม่มีสลิปแนบ</span>
                   )}
 
                   <button
@@ -452,30 +453,30 @@ function RequestsTab() {
 
       {noteAction ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
+          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
             <h3 className="text-lg font-semibold text-slate-900">
               {noteAction.kind === 'approve' ? 'อนุมัติ' : 'ไม่อนุมัติ'}รายการ{' '}
               {noteAction.code}
             </h3>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-2 text-base text-slate-700">
               {noteAction.kind === 'approve'
                 ? 'กดยืนยันเพื่ออนุมัติรายการนี้ หากช่วงเวลาถูกจองไปแล้วระบบจะแจ้งความขัดแย้งให้ทราบ'
                 : 'กดยืนยันเพื่อปฏิเสธรายการนี้ หากมีเหตุผล แนะนำให้ใส่หมายเหตุให้ผู้จองทราบ'}
             </p>
-            <label className="mt-4 flex flex-col gap-1 text-sm text-slate-700">
+            <label className="mt-5 flex flex-col gap-2 text-base text-slate-700">
               <span>หมายเหตุ (ไม่บังคับ)</span>
               <textarea
-                className={`${inputCls} min-h-24`}
+                className={`${inputCls} min-h-32`}
                 value={note}
                 maxLength={300}
                 onChange={(event) => setNote(event.target.value)}
                 placeholder="เช่น ไม่สามารถติดต่อผู้จองได้"
               />
             </label>
-            <div className="mt-3">
+            <div className="mt-4">
               <SectionError message={noteError} />
             </div>
-            <div className="mt-4 flex justify-end gap-2">
+            <div className="mt-5 flex flex-wrap justify-end gap-3">
               <button
                 type="button"
                 className={btnGhost}
@@ -577,30 +578,30 @@ function RatesTab() {
   if (loading) return <Spinner />
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm text-slate-600">
+    <div className="flex flex-col gap-6">
+      <p className="text-base text-slate-700">
         ตั้งราคาต่อชั่วโมงแยกตามห้อง ประเภทผู้ใช้ และช่วงเวลา บันทึกทีละช่อง
       </p>
       <SectionError message={error} />
       <SectionNotice message={notice} />
 
       {sortedRooms.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+        <p className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-base text-slate-600">
           ไม่พบข้อมูลห้อง
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-          <table className="w-full min-w-3xl border-collapse text-sm">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full min-w-3xl border-collapse text-base">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50 text-left text-slate-700">
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   ห้อง
                 </th>
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   ประเภทผู้ใช้
                 </th>
                 {RATE_KINDS.map((kind) => (
-                  <th key={kind} scope="col" className="px-4 py-3 font-medium">
+                  <th key={kind} scope="col" className="px-4 py-4 font-semibold">
                     {RATE_KIND_LABEL[kind]}
                   </th>
                 ))}
@@ -618,17 +619,17 @@ function RatesTab() {
                     <th
                       scope="row"
                       rowSpan={USER_TYPES.length}
-                      className={`px-4 py-3 text-left font-medium text-slate-900 ${
+                      className={`px-4 py-4 text-left font-medium text-slate-900 ${
                         index === 0 ? '' : 'border-t border-slate-100'
                       }`}
                     >
                       {room.name}
-                      <span className="block text-xs font-normal text-slate-500">
+                      <span className="block text-sm font-normal text-slate-600">
                         {room.capacityMin}–{room.capacityMax} คน
                       </span>
                     </th>
                     <td
-                      className={`px-4 py-3 text-slate-700 ${
+                      className={`px-4 py-4 text-slate-700 ${
                         index === 0 ? '' : 'border-t border-slate-100'
                       }`}
                     >
@@ -639,18 +640,18 @@ function RatesTab() {
                       return (
                         <td
                           key={key}
-                          className={`px-4 py-3 ${
+                          className={`px-4 py-4 ${
                             index === 0 ? '' : 'border-t border-slate-100'
                           }`}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                             <input
                               type="number"
                               min={0}
                               step="1"
                               inputMode="numeric"
                               aria-label={`${room.name} ${USER_TYPE_LABEL[userType]} ${RATE_KIND_LABEL[kind]}`}
-                              className={`${inputCls} w-28`}
+                              className={`${inputCls} w-36`}
                               value={drafts[key] ?? ''}
                               onChange={(event) =>
                                 setDrafts((prev) => ({
@@ -732,12 +733,12 @@ function SettingsTab() {
   if (loading) return <Spinner />
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <SectionError message={error} />
       <SectionNotice message={notice} />
       {form ? (
-        <div className="flex max-w-3xl flex-col gap-4">
-          <label className="flex flex-col gap-1 text-sm text-slate-700">
+        <div className="flex max-w-3xl flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <label className="flex flex-col gap-2 text-base text-slate-700">
             <span>วิธีการชำระเงิน (แสดงให้ผู้จองทุกคนเห็นก่อนแนบสลิป)</span>
             <textarea
               className={`${inputCls} min-h-40`}
@@ -748,7 +749,7 @@ function SettingsTab() {
               }
             />
           </label>
-          <label className="flex flex-col gap-1 text-sm text-slate-700">
+          <label className="flex flex-col gap-2 text-base text-slate-700">
             <span>ช่องทางติดต่อ</span>
             <input
               className={inputCls}
@@ -820,9 +821,9 @@ function UsersTab({ me }: { me: Me }) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end gap-3">
-        <p className="flex-1 text-sm text-slate-600">
+        <p className="flex-1 text-base text-slate-700">
           ผู้ดูแลระบบสามารถอนุมัติการจอง แก้ไขค่าใช้จ่าย และจัดการผู้ใช้ได้
         </p>
         <button
@@ -841,29 +842,29 @@ function UsersTab({ me }: { me: Me }) {
       {loading && users === null ? <Spinner /> : null}
 
       {users !== null && users.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500">
+        <p className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center text-base text-slate-600">
           ไม่พบผู้ใช้ในระบบ
         </p>
       ) : null}
 
       {users !== null && users.length > 0 ? (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-          <table className="w-full min-w-2xl border-collapse text-sm">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <table className="w-full min-w-2xl border-collapse text-base">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50 text-left text-slate-700">
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   ชื่อ
                 </th>
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   อีเมล
                 </th>
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   สิทธิ์
                 </th>
-                <th scope="col" className="px-4 py-3 font-medium">
+                <th scope="col" className="px-4 py-4 font-semibold">
                   วันที่สมัคร
                 </th>
-                <th scope="col" className="px-4 py-3 text-right font-medium">
+                <th scope="col" className="px-4 py-4 text-right font-semibold">
                   จัดการ
                 </th>
               </tr>
@@ -878,33 +879,33 @@ function UsersTab({ me }: { me: Me }) {
                   >
                     <th
                       scope="row"
-                      className="px-4 py-3 text-left font-medium text-slate-900"
+                      className="px-4 py-4 text-left font-medium text-slate-900"
                     >
                       {user.name}
                       {isSelf ? (
-                        <span className="ml-2 text-xs font-normal text-slate-500">
+                        <span className="ml-2 text-sm font-normal text-slate-600">
                           (บัญชีของคุณ)
                         </span>
                       ) : null}
                     </th>
-                    <td className="px-4 py-3 text-slate-700">{user.email}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-4 text-slate-700">{user.email}</td>
+                    <td className="px-4 py-4">
                       <span
-                        className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${
+                        className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ring-1 ${
                           user.role === 'admin'
-                            ? 'bg-sky-100 text-sky-900 ring-sky-300'
-                            : 'bg-slate-100 text-slate-700 ring-slate-300'
+                            ? 'bg-brand-100 text-brand-900 ring-brand-300'
+                            : 'bg-slate-100 text-slate-700 ring-slate-400'
                         }`}
                       >
                         {user.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ใช้ทั่วไป'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-4 text-slate-700">
                       {new Date(user.createdAt).toLocaleDateString('th-TH', {
                         dateStyle: 'medium',
                       })}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-4 text-right">
                       <button
                         type="button"
                         className={btnGhost}
@@ -962,18 +963,18 @@ export default function AdminPage() {
   if (me.role !== 'admin') return <Navigate to="/" replace />
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6">
-      <header className="flex flex-wrap items-center justify-between gap-2">
+    <div className="flex w-full flex-col gap-6">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">หลังบ้านผู้ดูแลระบบ</h1>
-          <p className="text-sm text-slate-600">
+          <h1 className="text-2xl font-semibold text-slate-900">หลังบ้านผู้ดูแลระบบ</h1>
+          <p className="mt-2 text-base text-slate-700">
             ผู้ใช้ปัจจุบัน: {me.name} ({me.email})
           </p>
         </div>
       </header>
 
       <nav
-        className="flex flex-wrap gap-1 border-b border-slate-200"
+        className="flex flex-wrap gap-2"
         aria-label="ส่วนของผู้ดูแลระบบ"
       >
         {TABS.map((item) => (
@@ -982,10 +983,10 @@ export default function AdminPage() {
             type="button"
             aria-current={tab === item.id ? 'page' : undefined}
             onClick={() => setTab(item.id)}
-            className={`-mb-px rounded-t-lg border-b-2 px-4 py-2 text-sm font-medium transition ${
+            className={`min-h-12 rounded-full px-5 py-3 text-base font-medium transition focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 ${
               tab === item.id
-                ? 'border-sky-700 text-sky-800'
-                : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900'
+                ? 'bg-brand-600 text-white'
+                : 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-100'
             }`}
           >
             {item.label}

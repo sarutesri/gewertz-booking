@@ -52,39 +52,41 @@ export default function QuotePanel({ lines, emptyHint }: QuotePanelProps) {
   const total = lines.reduce((sum, line) => sum + line.subtotal, 0)
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h2 className="text-base font-semibold text-slate-900">ค่าใช้จ่ายโดยประมาณ</h2>
+    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-slate-900">ค่าใช้จ่ายโดยประมาณ</h2>
 
       {lines.length === 0 ? (
-        <p className="mt-3 text-sm text-slate-500">{emptyHint}</p>
+        <p className="mt-4 text-base text-slate-700">{emptyHint}</p>
       ) : (
         <>
-          <div className="mt-3 space-y-3">
+          <div className="mt-5 space-y-3">
             {lines.map((line) => (
-              <div key={`${line.roomId}:${line.rateKind}`} className="rounded-lg bg-slate-50 p-3">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-sm font-medium text-slate-900">{line.roomName}</span>
-                  <span className="text-sm font-semibold text-slate-900">{baht(line.subtotal)}</span>
+              <div key={`${line.roomId}:${line.rateKind}`} className="rounded-xl bg-slate-50 p-4">
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-base font-medium text-slate-900">{line.roomName}</span>
+                  <span className="text-base font-semibold text-slate-900">{baht(line.subtotal)}</span>
                 </div>
-                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate-600">
-                  <span className="rounded bg-white px-1.5 py-0.5 ring-1 ring-slate-200">
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-600">
+                  <span className="rounded bg-white px-2 py-0.5 ring-1 ring-slate-200">
                     {RATE_KIND_LABEL[line.rateKind]}
                   </span>
-                  <span>{line.hours} ชั่วโมง × {baht(line.pricePerHour)}</span>
+                  <span>
+                    {line.hours} ชั่วโมง × {baht(line.pricePerHour)}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-4 flex items-baseline justify-between border-t border-slate-200 pt-3">
-            <span className="text-sm font-medium text-slate-700">ยอดรวมทั้งหมด</span>
-            <span className="text-xl font-semibold text-emerald-700">{baht(total)}</span>
+          <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 border-t border-slate-200 pt-5">
+            <span className="text-base font-medium text-slate-700">ยอดรวมทั้งหมด</span>
+            <span className="text-3xl font-semibold text-slate-900">{baht(total)}</span>
           </div>
 
           {total === 0 ? (
-            <p className="mt-2 text-xs text-slate-500">หน่วยงานภายในใช้ห้องฟรี ไม่ต้องชำระเงิน ระบบจะส่งให้แอดมินอนุมัติ</p>
+            <p className="mt-3 text-sm text-slate-600">หน่วยงานภายในใช้ห้องฟรี ไม่ต้องชำระเงิน ระบบจะส่งให้แอดมินอนุมัติ</p>
           ) : (
-            <p className="mt-2 text-xs text-slate-500">ยอดจริงจะคำนวณซ้ำโดยเซิร์ฟเวอร์อีกครั้งตอนกดยืนยัน</p>
+            <p className="mt-3 text-sm text-slate-600">ยอดจริงจะคำนวณซ้ำโดยเซิร์ฟเวอร์อีกครั้งตอนกดยืนยัน</p>
           )}
         </>
       )}

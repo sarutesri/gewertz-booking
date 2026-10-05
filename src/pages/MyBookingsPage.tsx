@@ -46,16 +46,16 @@ function errorMessage(err: unknown): string {
 }
 
 const STATUS_STYLE: Record<BookingStatus, string> = {
-  pending_payment: 'bg-amber-100 text-amber-800 ring-amber-300',
-  approved: 'bg-emerald-100 text-emerald-800 ring-emerald-300',
-  rejected: 'bg-rose-100 text-rose-800 ring-rose-300',
-  cancelled: 'bg-zinc-200 text-zinc-700 ring-zinc-300',
+  pending_payment: 'bg-amber-100 text-amber-900 ring-amber-400',
+  approved: 'bg-emerald-100 text-emerald-900 ring-emerald-400',
+  rejected: 'bg-rose-100 text-rose-900 ring-rose-400',
+  cancelled: 'bg-slate-200 text-slate-800 ring-slate-400',
 }
 
 function StatusBadge({ status }: { status: BookingStatus }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-sm font-medium ring-1 ${STATUS_STYLE[status]}`}
+      className={`inline-flex shrink-0 items-center rounded-full px-4 py-1.5 text-base font-semibold ring-1 ${STATUS_STYLE[status]}`}
     >
       {STATUS_LABEL[status]}
     </span>
@@ -64,27 +64,25 @@ function StatusBadge({ status }: { status: BookingStatus }) {
 
 function QuoteBreakdown({ quote }: { quote: Quote }) {
   return (
-    <div className="rounded-lg bg-zinc-50 p-3 ring-1 ring-zinc-200">
-      <h3 className="mb-2 text-sm font-semibold text-zinc-700">รายละเอียดค่าใช้จ่าย</h3>
-      <ul className="space-y-1 text-sm">
+    <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+      <h3 className="mb-3 text-base font-semibold text-slate-900">รายละเอียดค่าใช้จ่าย</h3>
+      <ul className="space-y-2 text-base">
         {quote.lines.map((line, i) => (
           <li
             key={`${line.roomId}-${line.rateKind}-${i}`}
             className="flex flex-wrap justify-between gap-x-3"
           >
-            <span className="text-zinc-700">
+            <span className="text-slate-700">
               {line.roomName}
-              <span className="text-zinc-500">
-                {' '}
-                ({line.rateKind === 'day' ? 'ช่วงกลางวัน' : 'ช่วงเย็น'} · {line.hours} ชม. ×{' '}
+              <span className="text-slate-600">
                 {baht(line.pricePerHour)})
               </span>
             </span>
-            <span className="tabular-nums text-zinc-900">{baht(line.subtotal)}</span>
+            <span className="tabular-nums text-slate-900">{baht(line.subtotal)}</span>
           </li>
         ))}
       </ul>
-      <div className="mt-2 flex justify-between border-t border-zinc-200 pt-2 text-sm font-semibold">
+      <div className="mt-3 flex justify-between border-t border-slate-200 pt-3 text-base font-semibold text-slate-900">
         <span>รวม</span>
         <span className="tabular-nums">{baht(quote.total)}</span>
       </div>
@@ -103,14 +101,14 @@ function ExpiryCountdown({ expiresAt }: { expiresAt: number }) {
   const remaining = expiresAt - now
   if (remaining <= 0) {
     return (
-      <p className="text-sm font-medium text-rose-700">
+      <p className="text-base font-medium text-rose-700">
         หมดเวลาชำระเงินแล้ว หากยังไม่ชำระ การจองนี้อาจถูกยกเลิกอัตโนมัติ
       </p>
     )
   }
-  const tone = remaining < 3_600_000 ? 'text-amber-700' : 'text-zinc-600'
+  const tone = remaining < 3_600_000 ? 'text-amber-800' : 'text-slate-700'
   return (
-    <p className={`text-sm font-medium ${tone}`}>
+    <p className={`text-base font-medium ${tone}`}>
       เหลือเวลาชำระเงิน{expiryText(expiresAt)}
     </p>
   )
@@ -153,11 +151,11 @@ function SlipViewer({ bookingId, fileName }: { bookingId: string; fileName: stri
     [],
   )
 
-  if (loading) return <p className="py-6 text-center text-sm text-zinc-500">กำลังโหลดสลิป…</p>
+  if (loading) return <p className="py-8 text-center text-base text-slate-600">กำลังโหลดสลิป…</p>
 
   if (error) {
     return (
-      <div className="rounded-lg bg-rose-50 p-3 text-sm text-rose-700 ring-1 ring-rose-200">{error}</div>
+      <div className="rounded-xl bg-rose-50 p-4 text-base text-rose-800 ring-1 ring-rose-200">{error}</div>
     )
   }
   if (!url) return null
@@ -166,13 +164,13 @@ function SlipViewer({ bookingId, fileName }: { bookingId: string; fileName: stri
     <iframe
       title="สลิปการชำระเงิน"
       src={url}
-      className="h-72 w-full rounded-lg bg-white ring-1 ring-zinc-300"
+      className="h-80 w-full rounded-xl bg-white ring-1 ring-slate-300"
     />
   ) : (
     <img
       src={url}
       alt="สลิปการชำระเงิน"
-      className="max-h-72 w-full rounded-lg bg-white object-contain ring-1 ring-zinc-300"
+      className="max-h-80 w-full rounded-xl bg-white object-contain ring-1 ring-slate-300"
     />
   )
 }
@@ -244,9 +242,9 @@ function SlipUploader({
   }
 
   return (
-    <div className="space-y-3 rounded-lg bg-zinc-50 p-3 ring-1 ring-zinc-200">
-      <div className="flex flex-wrap items-center gap-2">
-        <label className="cursor-pointer rounded-md bg-white px-3 py-2 text-sm font-medium text-zinc-700 ring-1 ring-zinc-300 hover:bg-zinc-100">
+    <div className="space-y-4 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-100 focus-within:ring-2 focus-within:ring-brand-600 focus-within:ring-offset-2">
           เลือกไฟล์สลิป
           <input
             ref={inputRef}
@@ -260,27 +258,27 @@ function SlipUploader({
           />
         </label>
         {file && (
-          <span className="text-sm text-zinc-600">
+          <span className="text-base text-slate-700">
             {file.name} · {fileSize(file.size)}
           </span>
         )}
       </div>
 
-      {info && <p className="text-sm text-zinc-600">{info}</p>}
-      {error && <p className="text-sm text-rose-600">{error}</p>}
+      {info && <p className="text-sm text-slate-600">{info}</p>}
+      {error && <p className="text-sm text-rose-700">{error}</p>}
 
       <input
         type="text"
         value={note}
         onChange={(e) => setNote(e.target.value)}
         placeholder="หมายเหตุ (ถ้ามี)"
-        className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none"
+        className="w-full min-h-12 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none"
       />
       <button
         type="button"
         disabled={!file || busy}
         onClick={() => void submit()}
-        className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-zinc-300"
+        className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-base font-medium text-white transition hover:bg-brand-700 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
       >
         {busy ? 'กำลังอัปโหลด…' : 'อัปโหลดสลิป'}
       </button>
@@ -301,19 +299,19 @@ function ConfirmCancelDialog({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-xl">
-        <h2 className="text-lg font-semibold text-zinc-900">ยืนยันการยกเลิกการจอง</h2>
-        <p className="mt-2 text-sm text-zinc-600">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <h2 className="text-lg font-semibold text-slate-900">ยืนยันการยกเลิกการจอง</h2>
+        <p className="mt-2 text-base text-slate-700">
           การจอง <span className="font-mono font-semibold">{booking.code}</span> (
           {booking.rooms.map((r) => r.name).join(', ')} · {formatDate(booking.activityDate)}{' '}
           {hourRange(booking.startHour, booking.endHour)}) จะถูกยกเลิกและย้อนกลับไม่ได้
         </p>
-        <div className="mt-5 flex justify-end gap-2">
+        <div className="mt-6 flex flex-wrap justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="rounded-md bg-white px-4 py-2 text-sm font-medium text-zinc-700 ring-1 ring-zinc-300 hover:bg-zinc-100 disabled:opacity-50"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-100 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:opacity-50"
           >
             ไม่ยกเลิก
           </button>
@@ -321,7 +319,7 @@ function ConfirmCancelDialog({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 disabled:opacity-50"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-rose-700 px-5 py-3 text-base font-medium text-white transition hover:bg-rose-800 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-rose-700 focus-visible:ring-offset-2 disabled:opacity-50"
           >
             {busy ? 'กำลังดำเนินการ…' : 'ยืนยันยกเลิก'}
           </button>
@@ -373,85 +371,85 @@ function BookingCard({
   }
 
   return (
-    <article className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-zinc-200 sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-sm font-semibold text-zinc-900">{booking.code}</span>
+            <span className="font-mono text-base font-semibold text-slate-900">{booking.code}</span>
             <StatusBadge status={booking.status} />
           </div>
-          <h2 className="mt-1 text-base font-semibold text-zinc-900 sm:text-lg">{roomNames}</h2>
-          <p className="text-sm text-zinc-600">
+          <h2 className="mt-2 text-lg font-semibold text-slate-900">{roomNames}</h2>
+          <p className="mt-1 text-base text-slate-700">
             {formatDate(booking.activityDate)} · {hourRange(booking.startHour, booking.endHour)} (
             {booking.endHour - booking.startHour} ชั่วโมง)
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-zinc-500">ยอดชำระ</p>
-          <p className="text-xl font-semibold tabular-nums text-zinc-900">{baht(booking.amount)}</p>
+          <p className="text-sm text-slate-600">ยอดชำระ</p>
+          <p className="text-3xl font-semibold tabular-nums text-slate-900">{baht(booking.amount)}</p>
         </div>
       </div>
 
-      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-3">
+      <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-base sm:grid-cols-3">
         <div>
-          <dt className="text-zinc-500">ประเภทผู้ใช้</dt>
-          <dd className="text-zinc-800">{USER_TYPE_LABEL[booking.userType]}</dd>
+          <dt className="text-sm text-slate-600">ประเภทผู้ใช้</dt>
+          <dd className="text-slate-900">{USER_TYPE_LABEL[booking.userType]}</dd>
         </div>
         <div>
-          <dt className="text-zinc-500">จำนวนผู้เข้าร่วม</dt>
-          <dd className="text-zinc-800">
+          <dt className="text-sm text-slate-600">จำนวนผู้เข้าร่วม</dt>
+          <dd className="text-slate-900">
             {booking.attendees} คน
             {attendeesMax !== Number.MAX_SAFE_INTEGER && (
-              <span className="text-zinc-500"> (สูงสุด {attendeesMax})</span>
+              <span className="text-slate-600"> (สูงสุด {attendeesMax})</span>
             )}
           </dd>
         </div>
         {booking.paymentVerifiedAt != null && (
           <div>
-            <dt className="text-zinc-500">ตรวจสอบยอดแล้ว</dt>
-            <dd className="text-zinc-800">{formatDateTime(booking.paymentVerifiedAt)}</dd>
+            <dt className="text-sm text-slate-600">ตรวจสอบยอดแล้ว</dt>
+            <dd className="text-slate-900">{formatDateTime(booking.paymentVerifiedAt)}</dd>
           </div>
         )}
       </dl>
 
-      <div className="mt-3">
-        <p className="text-sm text-zinc-500">วัตถุประสงค์</p>
-        <p className="whitespace-pre-wrap text-sm text-zinc-800">{booking.purpose || '—'}</p>
+      <div className="mt-5">
+        <p className="text-sm text-slate-600">วัตถุประสงค์</p>
+        <p className="mt-1 whitespace-pre-wrap text-base text-slate-900">{booking.purpose || '—'}</p>
       </div>
 
       {booking.reviewNote && (
-        <p className="mt-3 rounded-lg bg-rose-50 p-3 text-sm text-rose-800 ring-1 ring-rose-200">
+        <p className="mt-4 rounded-xl bg-rose-50 p-4 text-base text-rose-800 ring-1 ring-rose-200">
           ความคิดเห็นจากแอดมิน: {booking.reviewNote}
         </p>
       )}
       {booking.paymentNote && (
-        <p className="mt-3 rounded-lg bg-zinc-50 p-3 text-sm text-zinc-700 ring-1 ring-zinc-200">
+        <p className="mt-4 rounded-xl bg-slate-50 p-4 text-base text-slate-700 ring-1 ring-slate-200">
           หมายเหตุการชำระเงิน: {booking.paymentNote}
         </p>
       )}
 
       {canPay && booking.expiresAt != null && (
-        <div className="mt-3">
+        <div className="mt-4">
           <ExpiryCountdown expiresAt={booking.expiresAt} />
         </div>
       )}
 
-      <div className="mt-4">
+      <div className="mt-5">
         <QuoteBreakdown quote={booking.quote} />
       </div>
 
       {error && (
-        <p className="mt-3 rounded-lg bg-rose-50 p-3 text-sm text-rose-700 ring-1 ring-rose-200">
+        <p className="mt-4 rounded-xl bg-rose-50 p-4 text-base text-rose-800 ring-1 ring-rose-200">
           {error}
         </p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-3">
         {canPay && (
           <button
             type="button"
             onClick={() => setShowUploader((v) => !v)}
-            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-600 px-5 py-3 text-base font-medium text-white transition hover:bg-brand-700 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           >
             {showUploader ? 'ปิดการอัปโหลดสลิป' : slipName ? 'อัปโหลดสลิปใหม่' : 'อัปโหลดสลิป'}
           </button>
@@ -460,7 +458,7 @@ function BookingCard({
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="rounded-md bg-white px-4 py-2 text-sm font-medium text-rose-700 ring-1 ring-rose-300 hover:bg-rose-50"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-rose-300 bg-white px-5 py-3 text-base font-medium text-rose-700 transition hover:bg-rose-50 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-rose-700 focus-visible:ring-offset-2"
           >
             ยกเลิกการจอง
           </button>
@@ -468,7 +466,7 @@ function BookingCard({
       </div>
 
       {showUploader && canPay && (
-        <div className="mt-3">
+        <div className="mt-4">
           <SlipUploader
             bookingId={booking.id}
             onUploaded={(fileName) => {
@@ -483,9 +481,9 @@ function BookingCard({
       )}
 
       {slipName && (
-        <div className="mt-4">
-          <p className="mb-2 text-sm font-medium text-zinc-700">
-            สลิปที่แนบไว้: <span className="font-normal text-zinc-600">{slipName}</span>
+        <div className="mt-5">
+          <p className="mb-3 text-base font-medium text-slate-900">
+            สลิปที่แนบไว้: <span className="font-normal text-slate-700">{slipName}</span>
           </p>
           <SlipViewer key={slipKey} bookingId={booking.id} fileName={slipName} />
         </div>
@@ -531,17 +529,17 @@ export default function MyBookingsPage() {
   }, [reloadKey])
 
   if (loading) {
-    return <p className="py-10 text-center text-zinc-500">กำลังโหลดรายการการจอง…</p>
+    return <p className="py-12 text-center text-base text-slate-600">กำลังโหลดรายการการจอง…</p>
   }
 
   if (error) {
     return (
-      <div className="rounded-xl bg-rose-50 p-4 text-center ring-1 ring-rose-200">
-        <p className="text-sm text-rose-700">{error}</p>
+      <div className="rounded-2xl bg-rose-50 p-6 text-center ring-1 ring-rose-200">
+        <p className="text-base text-rose-800">{error}</p>
         <button
           type="button"
           onClick={() => setReloadKey((n) => n + 1)}
-          className="mt-3 rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700"
+          className="mt-4 inline-flex min-h-12 items-center justify-center rounded-xl bg-rose-700 px-5 py-3 text-base font-medium text-white transition hover:bg-rose-800 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-rose-700 focus-visible:ring-offset-2"
         >
           ลองใหม่
         </button>
@@ -551,9 +549,9 @@ export default function MyBookingsPage() {
 
   if (bookings.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-10 text-center ring-1 ring-zinc-200">
-        <h2 className="text-lg font-semibold text-zinc-900">ยังไม่มีรายการจอง</h2>
-        <p className="mt-1 text-sm text-zinc-600">
+      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-900">ยังไม่มีรายการจอง</h2>
+        <p className="mt-2 text-base text-slate-700">
           เมื่อคุณจองห้องประชุม รายการทั้งหมดจะแสดงที่นี่ พร้อมสถานะ ยอดชำระ และปุ่มจัดการ
         </p>
       </div>
@@ -561,8 +559,8 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-semibold text-zinc-900">การจองของฉัน</h1>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold text-slate-900">การจองของฉัน</h1>
       {bookings.map((b) => (
         <BookingCard key={b.id} booking={b} onChanged={() => setReloadKey((n) => n + 1)} />
       ))}

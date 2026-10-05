@@ -193,7 +193,7 @@ export default function BookingPage() {
 
   function handleCellClick(roomId: string, hour: number) {
     const cell = cells.get(cellKey(roomId, hour))
-    if (cell === undefined || cell.state !== 'free') return
+    if (cell === undefined || cell.state !== 'free' || cell.past === true) return
     setNotice('')
     setSubmitError('')
 
@@ -306,17 +306,17 @@ export default function BookingPage() {
     created === null
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+    <div className="w-full space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">จองห้อง</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-2 text-base text-slate-700">
             เลือกช่วงเวลาที่ต้องการจากตาราง แล้วเลือกห้องที่จะใช้งาน
           </p>
         </div>
-        <div className="flex flex-wrap items-end gap-2">
+        <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label htmlFor="booking-date" className="mb-1 block text-sm font-medium text-slate-700">
+            <label htmlFor="booking-date" className="mb-2 block text-base font-medium text-slate-700">
               วันที่ใช้ห้อง
             </label>
             <input
@@ -325,25 +325,25 @@ export default function BookingPage() {
               value={date}
               min={today}
               onChange={(event) => changeDate(event.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none"
+              className="min-h-12 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none"
             />
           </div>
           <button
             type="button"
             onClick={() => changeDate(today)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           >
             วันนี้
           </button>
         </div>
       </header>
 
-      <p className="mt-2 text-sm text-slate-600">
+      <p className="text-base text-slate-700">
         วันที่เลือก: <span className="font-medium text-slate-900">{formatDate(date)}</span>
       </p>
 
       {created !== null && submittedRange !== null && (
-        <div className="mt-4">
+        <div className="mt-6">
           <BookingConfirmation
             result={created}
             date={date}
@@ -357,7 +357,7 @@ export default function BookingPage() {
 
       {created === null && (
         <>
-          <div className="mt-4 space-y-3">
+          <div className="mt-6 space-y-4">
             {roomsError !== '' && (
               <ErrorPanel message={roomsError} onRetry={() => setRoomsReloadKey((key) => key + 1)} />
             )}
@@ -366,78 +366,80 @@ export default function BookingPage() {
             )}
           </div>
 
-          <div className="mt-4 space-y-3">
-            <AvailabilityLegend />
-            {notice !== '' && (
-              <p role="status" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-                {notice}
-              </p>
-            )}
+          <div className="mt-4 flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <AvailabilityLegend />
+              {notice !== '' && (
+                <p role="status" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-base text-amber-900">
+                  {notice}
+                </p>
+              )}
 
-            {roomsError === '' && roomsLoading && <LoadingPanel message="กำลังโหลดข้อมูลห้อง…" />}
+              {roomsError === '' && roomsLoading && <LoadingPanel message="กำลังโหลดข้อมูลห้อง…" />}
 
-            {roomsError === '' && !roomsLoading && rooms.length === 0 && (
-              <EmptyPanel message="ยังไม่มีข้อมูลห้องในระบบ กรุณาติดต่อผู้ดูแลระบบ" />
-            )}
+              {roomsError === '' && !roomsLoading && rooms.length === 0 && (
+                <EmptyPanel message="ยังไม่มีข้อมูลห้องในระบบ กรุณาติดต่อผู้ดูแลระบบ" />
+              )}
 
-            {roomsError === '' && rooms.length > 0 && availLoading && availability === null && (
-              <LoadingPanel message="กำลังโหลดตารางความว่างของห้อง…" />
-            )}
+              {roomsError === '' && rooms.length > 0 && availLoading && availability === null && (
+                <LoadingPanel message="กำลังโหลดตารางความว่างของห้อง…" />
+              )}
 
-            {roomsError === '' && rooms.length > 0 && availError === '' && !availLoading && (
-              <>
-                <BookingGrid
-                  rooms={rooms}
-                  hours={hours}
-                  cells={cells}
-                  selectedRooms={selectedRoomIds}
-                  range={range}
-                  onCellClick={handleCellClick}
-                  onToggleRoom={handleToggleRoom}
-                />
-                <SelectionBar
-                  range={range}
-                  roomNames={selectedRooms.map((room) => room.name)}
-                  date={date}
-                  onClear={resetSelection}
-                />
-                {freeCellCount === 0 && (
-                  <EmptyPanel
-                    message={`วันที่ ${formatDate(date)} ไม่มีช่วงเวลาว่างเลย กรุณาเลือกวันที่อื่นหรือติดต่อผู้ดูแลระบบ`}
+              {roomsError === '' && rooms.length > 0 && availError === '' && !availLoading && (
+                <>
+                  <BookingGrid
+                    rooms={rooms}
+                    hours={hours}
+                    cells={cells}
+                    selectedRooms={selectedRoomIds}
+                    range={range}
+                    onCellClick={handleCellClick}
+                    onToggleRoom={handleToggleRoom}
                   />
-                )}
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    onClick={handleSelectSparkTogether}
-                    disabled={sparkRooms.length === 0}
-                    className="rounded-lg border border-emerald-600 bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
-                  >
-                    เลือก Spark 1-3 พร้อมกัน
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+                  <SelectionBar
+                    range={range}
+                    roomNames={selectedRooms.map((room) => room.name)}
+                    date={date}
+                    onClear={resetSelection}
+                  />
+                  {freeCellCount === 0 && (
+                    <EmptyPanel
+                      message={`วันที่ ${formatDate(date)} ไม่มีช่วงเวลาว่างเลย กรุณาเลือกวันที่อื่นหรือติดต่อผู้ดูแลระบบ`}
+                    />
+                  )}
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={handleSelectSparkTogether}
+                      disabled={sparkRooms.length === 0}
+                      className="inline-flex min-h-12 items-center justify-center rounded-xl border border-brand-600 bg-white px-5 py-3 text-base font-semibold text-brand-700 transition hover:bg-brand-50 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
+                    >
+                      เลือก Spark 1-3 พร้อมกัน
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
 
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            <QuotePanel
-              lines={lines}
-              emptyHint="เลือกช่วงเวลาจากตารางและเลือกห้องที่ต้องการ เพื่อดูค่าใช้จ่ายโดยประมาณ"
-            />
-            <BookingForm
-              userType={userType}
-              attendees={attendees}
-              purpose={purpose}
-              maxAttendees={maxAttendees}
-              submitting={submitting}
-              canSubmit={canSubmit}
-              errorMessage={submitError}
-              onUserTypeChange={setUserType}
-              onAttendeesChange={setAttendees}
-              onPurposeChange={setPurpose}
-              onSubmit={handleSubmit}
-            />
+            <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+              <BookingForm
+                userType={userType}
+                attendees={attendees}
+                purpose={purpose}
+                maxAttendees={maxAttendees}
+                submitting={submitting}
+                canSubmit={canSubmit}
+                errorMessage={submitError}
+                onUserTypeChange={setUserType}
+                onAttendeesChange={setAttendees}
+                onPurposeChange={setPurpose}
+                onSubmit={handleSubmit}
+              />
+              <QuotePanel
+                lines={lines}
+                emptyHint="เลือกช่วงเวลาจากตารางและเลือกห้องที่ต้องการ เพื่อดูค่าใช้จ่ายโดยประมาณ"
+              />
+            </div>
           </div>
         </>
       )}

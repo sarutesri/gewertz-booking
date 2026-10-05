@@ -18,8 +18,11 @@ interface BookingFormProps {
 }
 
 const inputClass =
-  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 focus:outline-none'
-const labelClass = 'mb-1 block text-sm font-medium text-slate-700'
+  'w-full min-h-12 rounded-xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none'
+const labelClass = 'mb-2 block text-base font-medium text-slate-700'
+const hintClass = 'mt-2 text-sm'
+const submitClass =
+  'mt-6 w-full min-h-12 rounded-xl bg-brand-600 px-5 py-3 text-base font-semibold text-white transition hover:bg-brand-700 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300'
 
 export default function BookingForm({
   userType,
@@ -39,15 +42,15 @@ export default function BookingForm({
 
   return (
     <form
-      className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
       onSubmit={(event) => {
         event.preventDefault()
         if (canSubmit && !submitting) onSubmit()
       }}
     >
-      <h2 className="text-base font-semibold text-slate-900">ข้อมูลผู้จอง</h2>
+      <h2 className="text-lg font-semibold text-slate-900">ข้อมูลผู้จอง</h2>
 
-      <div className="mt-4 space-y-4">
+      <div className="mt-6 space-y-6">
         <div>
           <label className={labelClass} htmlFor="booking-user-type">
             ประเภทผู้ใช้งาน
@@ -83,9 +86,9 @@ export default function BookingForm({
               const next = Number(event.target.value)
               onAttendeesChange(Number.isNaN(next) ? 0 : next)
             }}
-            className={`${inputClass} ${tooMany || tooFew ? 'border-red-400' : ''}`}
+            className={`${inputClass} ${tooMany || tooFew ? 'border-rose-400' : ''}`}
           />
-          <p className={`mt-1 text-xs ${tooMany || tooFew ? 'text-red-600' : 'text-slate-500'}`}>
+          <p className={`${hintClass} ${tooMany || tooFew ? 'text-rose-700' : 'text-slate-600'}`}>
             {tooFew
               ? 'กรุณากรอกจำนวนผู้เข้าใช้งานอย่างน้อย 1 คน'
               : tooMany
@@ -106,25 +109,21 @@ export default function BookingForm({
             disabled={submitting}
             onChange={(event) => onPurposeChange(event.target.value)}
             placeholder="เช่น ประชุมโครงการวิจัย คณะวิศวกรรมศาสตร์"
-            className={`${inputClass} resize-y ${purpose.trim().length === 0 ? 'border-red-400' : ''}`}
+            className={`${inputClass} min-h-32 resize-y ${purpose.trim().length === 0 ? 'border-rose-400' : ''}`}
           />
-          <p className="mt-1 text-xs text-slate-500">
+          <p className={`${hintClass} ${purpose.trim().length === 0 ? 'text-rose-700' : 'text-slate-600'}`}>
             {purpose.trim().length === 0 ? 'กรุณากรอกวัตถุประสงค์การใช้ห้อง' : `${purpose.trim().length}/500 ตัวอักษร`}
           </p>
         </div>
       </div>
 
       {errorMessage !== '' && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p role="alert" className="mt-6 rounded-xl bg-rose-50 px-4 py-3 text-base text-rose-800">
           {errorMessage}
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={!canSubmit || submitting}
-        className="mt-5 w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-300"
-      >
+      <button type="submit" disabled={!canSubmit || submitting} className={submitClass}>
         {submitting ? 'กำลังส่งคำขอจอง…' : 'ยืนยันการจอง'}
       </button>
     </form>
