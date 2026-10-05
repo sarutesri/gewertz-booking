@@ -22,7 +22,7 @@ const SLIP_EXTENSION: Record<string, string> = {
   'application/pdf': 'pdf',
 }
 
-const bangkokDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' })
+import { bangkokNow } from '../time'
 
 const createPayload = z.object({
   activityDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -71,12 +71,15 @@ bookingRoutes.get('/availability', async (c) => {
   const byCell: Record<string, (typeof conflicts)[number]> = {}
   for (const conflict of conflicts) byCell[`${conflict.roomId}:${conflict.hour}`] = conflict
 
+  // ช่วงเวลาของวันนี้ที่เริ่มไปแล้วถือว่าเลยเวลา ต้องเทาทึบและเลือกไม่ได้
+  const clock = bangkokNow()
   const cells: DayCell[] = []
   for (const room of rooms) {
     for (let hour = openStart; hour < openEnd; hour += 1) {
       const conflict = byCell[`${room.id}:${hour}`]
+      const past = date === clock.date && hour <= clock.hour
       if (!conflict) {
-        cells.push({ roomId: room.id, hour, state: 'free' })
+        cells.push({ roomId: room.id, hour, state: 'free', past })
         continue
       }
       const visible = conflict.userId === viewer.id || viewer.role === 'admin'
@@ -84,6 +87,7 @@ bookingRoutes.get('/availability', async (c) => {
         roomId: room.id,
         hour,
         state: conflict.state,
+        past,
         code: conflict.code,
         mine: conflict.userId === viewer.id,
         byName: visible ? conflict.byName : undefined,
@@ -107,8 +111,12 @@ bookingRoutes.post('/bookings', async (c) => {
   if (!parsed.success) return c.json({ error: 'ข้อมูลการจองไม่ครบถ้วนหรือไม่ถูกต้อง' }, 400)
   const input = parsed.data
 
-  if (input.activityDate < bangkokDate.format(new Date())) {
+  const clock = bangkokNow()
+  if (input.activityDate < clock.date) {
     return c.json({ error: 'ไม่สามารถจองย้อนหลังได้' }, 400)
+  }
+  if (input.activityDate === clock.date && input.startHour <= clock.hour) {
+    return c.json({ error: 'เวลาที่เลือกผ่านมาแล้ว กรุณาเลือกช่วงเวลาที่ยังไม่ถึง' }, 400)
   }
 
   const openStart = Number(c.env.OPEN_START)

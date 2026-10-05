@@ -77,6 +77,7 @@ export interface DayCell {
   code?: string
   byName?: string
   mine?: boolean
+  past?: boolean
 }
 
 export interface Availability {
